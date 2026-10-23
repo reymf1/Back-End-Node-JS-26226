@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Lista de Productos</h1>
+    <ul id="productos"></ul>
+    <p id="status">Cargando productos...</p>
+    <script>
+      async function fetchProducts() {
+        try {
+          console.log("Antes del fetch");
+          const response = await fetch("http://localhost:3000/api/productos");
+          console.log("Después del fetch");
+          if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+          }
+          const data = await response.json();
+          const productosList = document.getElementById("productos");
+          data.forEach((producto) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `${producto.nombre} - $${producto.precio}`;
+            productosList.appendChild(listItem);
+          });
+          document.getElementById("status").textContent =
+            "Productos cargados correctamente";
+        } catch (error) {
+          console.error("Error fetching products:", error);
+          document.getElementById("status").textContent =
+            "Error al cargar los productos";
+        }
+      }
+      fetchProducts();
+    </script>
+  </body>
+</html>
